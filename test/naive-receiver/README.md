@@ -1,5 +1,5 @@
 ## Problem 
-```flashLoan()``` function from ```NaiveReceiverLenderPool``` not check that the borrower is function caller (```msg.sender```) or not. it's allow anyone to operate the ```flashLoan()``` to any borrower as long as the borrower is a contract: 
+```flashLoan()``` function from ```NaiveReceiverLenderPool``` not check that the borrower is function caller (```msg.sender```) or not. it's allow ANYONE to operate the ```flashLoan()``` to any borrower as long as the borrower is a contract: 
 ```js
     require(borrower.isContract(), "Borrower must be a deployed contract");
 ```
