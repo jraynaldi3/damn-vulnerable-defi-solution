@@ -40,6 +40,13 @@ describe('[Challenge] Unstoppable', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        /**
+         * @notice whats wrong with the smart contract is they compare the Balance of smart contract and the poolBalance
+         * poolBalance will update every deposit() function call BUT its not the only way of that contract receive ERC20 token
+         * there is simply a transfer method from ERC20 standart, that will STOP the flash loan.
+         */
+
+        await this.token.connect(attacker).transfer(this.pool.address, 1);
     });
 
     after(async function () {
