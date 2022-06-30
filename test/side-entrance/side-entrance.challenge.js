@@ -6,9 +6,6 @@ describe('[Challenge] Side entrance', function () {
     let deployer, attacker;
 
     const ETHER_IN_POOL = ethers.utils.parseEther('1000');
-    10000000000000000000000
-    9999999440869285704406
-    1000000000000000000000
     before(async function () {
         /** SETUP SCENARIO - NO NEED TO CHANGE ANYTHING HERE */
         [deployer, attacker] = await ethers.getSigners();
