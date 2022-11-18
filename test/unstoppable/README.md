@@ -1,6 +1,9 @@
 ## The contract can be freeze permanently by outsider
 **Severity**: High
-Context: [UnstoppableLender.sol#L40](https://github.com/jraynaldi3/damn-vulnerable-defi-solution/blob/a217de5d255b1b754ab1a59044e010e77b5c19f6/contracts/unstoppable/UnstoppableLender.sol#L40)
+
+**Context**: [UnstoppableLender.sol#L40](https://github.com/jraynaldi3/damn-vulnerable-defi-solution/blob/a217de5d255b1b754ab1a59044e010e77b5c19f6/contracts/unstoppable/UnstoppableLender.sol#L40)
+
+
 The `UnstoppableLender` contract want to make sure the contract only receive ERC20 from `depositTokens` function with this code below:
 ```js
         // Ensured by the protocol via the `depositTokens` function
